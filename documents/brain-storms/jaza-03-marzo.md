@@ -1,3 +1,5 @@
+> Nota: Si lo hubiera hecho bien no tendría sentido este push -- Y la extensión md me la comí -- 😬.
+
 # Casos de uso
 CAPA DE PREPROCESAMIENTO (PRESEND) DE PROMPTS PARA:
 - CORREGIR ERRORES GRAMATICALES
