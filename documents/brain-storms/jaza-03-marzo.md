@@ -23,7 +23,7 @@ Negación del antecedente => Falacia formal => Tesis que parece válida pero no 
 Considero incorrecto establecer el concepto confabular en AI => Ponerse de acuerdo para emprender algún plan, generalmente ilícito. Adoptaría el término Falacia (Fallacy - Falacia)  
 https://es.wikipedia.org/wiki/Negaci%C3%B3n_del_antecedente#:~:text=En%20l%C3%B3gica%2C%20la%20negaci%C3%B3n%20del,entonces%20no%20pasar%C3%A1%20B%C2%BB).  
 
-Que es lo que hay que hacer, para asegurar el mejor resultado posible:  
+Qué es lo que hay que hacer, para asegurar el mejor resultado posible:  
 https://youtu.be/oFsLRtOuRyg?t=2701  
 
 Connections Settings  
@@ -36,18 +36,21 @@ Tool node
 - presentable -> **submittable**
 
 ## Concepto del nonato
-Busca una herramienta que le apoye a elaborar solicitudes (prompts) que además de inteligentes sean adecuadas(suitable), diáfanas(diaphanous) y respetusosas(respectful).
 
 ### Eslogan
+Busca una herramienta que le apoye a elaborar solicitudes (prompts) que además de inteligentes sean adecuadas(suitable), diáfanas(diaphanous) y respetusosas(respectful).
+
 Con **submittable** genere y muestre la mejor versión de Usted y su empresa con solicitudes (prompts) gramaticalmtene, con un mensaje claro y no ofensivo.
 
 ### Qué sería
 **Submittable** es una plataforma de IA que ayuda a las empresas a comunicarse lingüísticamente de manera adecuada, clara y respetusa.
 
+### Qué haria
+Con **submittable** genere y muestre la mejor versión de Usted y su empresa con solicitudes (prompts) gramaticalmtene, con un mensaje claro y no ofensivo.
 
 ### Objetivo - solución a problemática del mundo real
 
-Se le puede dar un enfoque de acompañamiento y como parte de solución os otros 2 proyectos.
+Se le puede dar un enfoque de acompañamiento y como parte de solución a los otros 2 proyectos.
 tanto **AI Support Employment & ROI Calculator** como "AI for supported employment job coaches" son dos escenarios o usuarios potenciales de nuestra solución, en dónde la selección dinámica del los LLMs se ajuste al contexto requerido por los otros 2 proyectos/escenarios (Sector de Educación "Apoyando al capacitador/coach y personas" y Empresarial "Suavizar el cambio al empleado").  
 
 Conceptualizar, desarrollar y ofertar la solución como eslabón (link) de otras soluciones de AI.
