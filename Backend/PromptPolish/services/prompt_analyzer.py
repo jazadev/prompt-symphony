@@ -4,15 +4,16 @@ import json
 import logging
 import re
 
+
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
 def validate_azure_config():
-    api_key = os.environ.get("AZURE_OPENAI_KEY")
-    endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 
+    api_key = "FW7F4fCMdFZIPeBvF4PsA7xEeP34MGqLsuZy1XdD1ZQ0vTTob9vFJQQJ99BCACYeBjFXJ3w3AAABACOGd4dZ"
+    endpoint = "https://e8oai.openai.azure.com/"    
     if not api_key:
         raise ValueError("No se ha proporcionado la clave API de Azure OpenAI")
     if not endpoint:
@@ -40,11 +41,14 @@ def validate_azure_config():
 
 
 def analyze_prompt(text):
+
+    api_key = "FW7F4fCMdFZIPeBvF4PsA7xEeP34MGqLsuZy1XdD1ZQ0vTTob9vFJQQJ99BCACYeBjFXJ3w3AAABACOGd4dZ"
+    endpoint = "https://e8oai.openai.azure.com/"
     try:
         validate_azure_config()
-
-        api_key = os.environ.get("AZURE_OPENAI_KEY")
-        endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
+        
+        # api_key = os.environ.get("AZURE_OPENAI_KEY")
+        # endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 
         logger.debug(f"Analizando prompt: {text}")
         logger.debug(f"Usando endpoint de Azure: {endpoint}")
@@ -57,7 +61,7 @@ def analyze_prompt(text):
         try:
             logger.debug("Intentando conectar con Azure OpenAI...")
             response = client.chat.completions.create(
-                model="gpt-4-turbo",  # nombre del deployment en Azure
+                model="gpt-4o-mini",  # nombre del deployment en Azure
                 messages=[{
                     "role":
                     "system",
@@ -100,3 +104,6 @@ def analyze_prompt(text):
     except Exception as e:
         logger.error(f"Error general al analizar con Azure OpenAI: {str(e)}")
         raise Exception(f"Error al analizar con Azure OpenAI: {str(e)}")
+    
+# print(validate_azure_config())
+print(analyze_prompt("Hola, me llamo Antonio y tengo sueño"))
