@@ -1,4 +1,4 @@
-# Prompt Synphony  ⬛🎼
+# Prompt Symphony  ⬛🎼
 
 ### Be the director of AI, perform it in synchrony with you in harmony with a better world.
 
