@@ -6,17 +6,19 @@ name: Build and deploy Python project to Azure Function App - infino-function-ap
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - 'Backend/infino/**'    
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_NAME: 'infino-function-api'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './Backend/infino/**' # set this to the path to your web app project, defaults to the repository root
   PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -31,8 +33,8 @@ jobs:
 
       - name: Create and start virtual environment
         run: |
-          python -m venv venv
-          source venv/bin/activate
+          python -m venv .venv
+          . .venv/bin/activate
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -61,7 +63,7 @@ jobs:
           name: python-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip     
+        run: unzip release.zip
         
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
