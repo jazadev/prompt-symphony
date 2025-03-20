@@ -9,3 +9,4 @@ flask_session/
 *.mo
 pip-log.txt
 local.settings.json
+.python_packages
