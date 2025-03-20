@@ -34,7 +34,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        ls -la .
+        ls -la ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
         if [ -f "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt" ]; then
           pip install -r ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt
         else
