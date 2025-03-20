@@ -31,16 +31,15 @@ jobs:
         . .venv/bin/activate
 
 #   Check, haaaa que cosas con el Azure y la estructura puro reto.
+    - name: Debug directory structure
+      run: |
+        echo "Working directory: $(pwd)"
+        echo "Repository contents:"
+        ls -R
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        ls -la ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        if [ -f "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt" ]; then
-          pip install -r ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt
-        else
-          echo "No se encontró el archivo requirements.txt en ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
-          exit 1
-        fi        
 #        pip install -r ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt
 #        pip install pytest pytest-cov
 
