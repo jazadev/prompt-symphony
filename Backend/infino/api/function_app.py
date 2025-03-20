@@ -5,7 +5,7 @@ from flask import Flask, request
 # Inicializar la aplicación Flask
 app = Flask(__name__)
 
-# Importar rutas de tu aplicación original
+# Importar rutas de la aplicación original
 from .routes import route1, route2
 
 # Registrar los blueprints
