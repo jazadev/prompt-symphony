@@ -70,4 +70,4 @@ jobs:
           app-name: 'infino-function-api'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A6DD1CA03C8E41DA8A7E6788A86D2E06 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4C906DA82511471AB243921FE639189D }}
