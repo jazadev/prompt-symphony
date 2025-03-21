@@ -1,0 +1,25 @@
+.list-group-item {
+    background-color: transparent;
+    border-color: var(--bs-border-color);
+}
+
+.progress {
+    height: 25px;
+}
+
+.card {
+    border-color: var(--bs-border-color);
+}
+
+#analysisResults {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#analysisResults.show {
+    opacity: 1;
+}
+
+.alert {
+    word-wrap: break-word;
+}

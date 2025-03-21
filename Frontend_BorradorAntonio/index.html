@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Symphony</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        /* Estilos para la barra lateral, con solo flecha visible inicialmente */
+        .sidebar {
+            width: 24px;
+            transition: width 0.3s ease-in-out;
+            z-index: 10;
+        }
+
+        .sidebar:hover,
+        .sidebar.expanded {
+            width: 256px;
+        }
+
+        .sidebar-content {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-content,
+        .sidebar.expanded .sidebar-content {
+            opacity: 1;
+            width: auto;
+            overflow: visible;
+        }
+
+        .sidebar-arrow {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar:hover .sidebar-arrow,
+        .sidebar.expanded .sidebar-arrow {
+            opacity: 0;
+        }
+
+        /* Estilos refinados para el árbol Git visual */
+        .git-tree-container {
+            position: relative;
+            height: 450px;
+            margin: 10px;
+            overflow-y: auto;
+        }
+
+        /* Línea principal vertical */
+        .main-branch {
+            position: absolute;
+            width: 2px;
+            background-color: #333;
+            top: 20px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        /* Nodos (commits) - tamaño ajustado */
+        .git-node {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+
+        /* Nodos de la rama principal (azules) */
+        .main-node {
+            background-color: #7dd3fc;
+            left: 50%;
+        }
+
+        /* Nodos de la rama derecha (verdes) */
+        .right-node {
+            background-color: #4ade80;
+            left: calc(50% + 50px);
+        }
+
+        /* Nodos de la rama izquierda (morados) */
+        .left-node {
+            background-color: #c084fc;
+            left: calc(50% - 50px);
+        }
+
+        /* Nodo activo - círculo exterior ajustado */
+        .active-node::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #38bdf8;
+        }
+
+        /* Líneas de las ramas laterales */
+        .branch-line {
+            position: absolute;
+            width: 2px;
+            background-color: #333;
+            z-index: 1;
+        }
+
+        /* Línea de rama derecha */
+        .right-branch-line {
+            left: calc(50% + 50px);
+        }
+
+        /* Línea de rama izquierda */
+        .left-branch-line {
+            left: calc(50% - 50px);
+        }
+
+        /* Conectores curvos entre ramas - simplificados y mejorados */
+        .connector {
+            position: absolute;
+            height: 2px;
+            background-color: transparent;
+            z-index: 2;
+        }
+
+        /* Conector horizontal derecho */
+        .right-connector {
+            width: 50px;
+            left: 50%;
+            background-color: #333;
+        }
+
+        /* Conector horizontal izquierdo */
+        .left-connector {
+            width: 50px;
+            left: calc(50% - 50px);
+            background-color: #333;
+        }
+
+        /* Curvas para conectores */
+        .curve {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            z-index: 2;
+        }
+
+        /* Curva superior derecha */
+        .right-curve-top {
+            border-radius: 0 0 0 20px;
+            border-top: none;
+            border-right: none;
+            left: calc(50% + 30px);
+        }
+
+        /* Curva inferior derecha */
+        .right-curve-bottom {
+            border-radius: 20px 0 0 0;
+            border-bottom: none;
+            border-right: none;
+            left: calc(50% + 30px);
+        }
+
+        /* Curva superior izquierda */
+        .left-curve-top {
+            border-radius: 0 0 20px 0;
+            border-top: none;
+            border-left: none;
+            left: calc(50% - 50px);
+        }
+
+        /* Curva inferior izquierda */
+        .left-curve-bottom {
+            border-radius: 0 20px 0 0;
+            border-bottom: none;
+            border-left: none;
+            left: calc(50% - 50px);
+        }
+
+        /* Etiquetas de commits - mejoradas */
+        .commit-label {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 12px;
+            background-color: #1e293b;
+            padding: 2px 8px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        /* Etiquetas para rama principal */
+        .main-label {
+            left: calc(50% + 15px);
+            transform: translateY(-50%);
+        }
+
+        /* Etiquetas para rama derecha */
+        .right-label {
+            left: calc(50% + 65px);
+            transform: translateY(-50%);
+        }
+
+        /* Etiquetas para rama izquierda */
+        .left-label {
+            right: calc(50% + 65px);
+            transform: translateY(-50%);
+            text-align: right;
+        }
+
+        /* Placeholder para el contenteditable */
+        [contenteditable=true]:empty:not(:focus):before {
+            content: attr(placeholder);
+            color: #6B7280;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-800 text-gray-100 min-h-screen">
+    <!-- Contenedor principal con barra lateral -->
+    <div class="flex h-screen">
+        <!-- Barra lateral con flecha visible inicialmente -->
+        <div class="sidebar bg-gray-900 h-full overflow-hidden hover:overflow-y-auto border-r border-gray-700"
+            id="sidebar">
+            <!-- Flecha visible cuando está colapsado -->
+            <div class="sidebar-arrow text-blue-500">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <!-- Contenido de la barra lateral (oculto inicialmente) -->
+            <div class="sidebar-content h-full flex flex-col">
+                <!-- Sección de Chats (mitad superior) -->
+                <div class="flex-1 border-b border-gray-700 overflow-y-auto">
+                    <div class="p-3 border-b border-gray-700">
+                        <div class="flex items-center">
+                            <i class="fas fa-comment-dots text-blue-500 mr-3"></i>
+                            <span class="font-semibold">Chats</span>
+                        </div>
+                    </div>
+
+                    <!-- Lista de chats -->
+                    <div class="py-2">
+                        <div class="px-3 py-2 hover:bg-gray-800 rounded-lg cursor-pointer my-1">
+                            <div class="flex items-center">
+                                <i class="fas fa-comment text-gray-400 mr-3"></i>
+                                <span>Proyecto A</span>
+                            </div>
+                        </div>
+                        <div class="px-3 py-2 bg-gray-800 rounded-lg cursor-pointer my-1">
+                            <div class="flex items-center">
+                                <i class="fas fa-comment text-blue-500 mr-3"></i>
+                                <span>Proyecto B (Activo)</span>
+                            </div>
+                        </div>
+                        <div class="px-3 py-2 hover:bg-gray-800 rounded-lg cursor-pointer my-1">
+                            <div class="flex items-center">
+                                <i class="fas fa-comment text-gray-400 mr-3"></i>
+                                <span>Prompt para GPT-4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Versiones (mitad inferior) -->
+                <div class="flex-1 overflow-y-auto">
+                    <div class="p-3 border-b border-gray-700">
+                        <div class="flex items-center">
+                            <i class="fas fa-code-branch text-blue-500 mr-3"></i>
+                            <span class="font-semibold">Historial de Versiones</span>
+                        </div>
+                    </div>
+
+                    <!-- Árbol Git visual refinado con estructura más limpia -->
+                    <div class="git-tree-container">
+                        <!-- Línea principal vertical -->
+                        <div class="main-branch"></div>
+
+                        <!-- Nodos en línea principal (azules) -->
+                        <div class="git-node main-node active-node" style="top: 40px;"></div>
+                        <div class="git-node main-node" style="top: 100px;"></div>
+                        <div class="git-node main-node" style="top: 160px;"></div>
+                        <div class="git-node main-node" style="top: 220px;"></div>
+                        <div class="git-node main-node" style="top: 280px;"></div>
+                        <div class="git-node main-node" style="top: 340px;"></div>
+                        <div class="git-node main-node" style="top: 400px;"></div>
+
+                        <!-- Rama derecha (verde) -->
+                        <div class="branch-line right-branch-line" style="top: 100px; height: 60px;"></div>
+
+                        <!-- Conectores de rama derecha -->
+                        <div class="connector right-connector" style="top: 100px;"></div>
+                        <div class="curve right-curve-top" style="top: 90px;"></div>
+                        <div class="connector right-connector" style="top: 160px;"></div>
+                        <div class="curve right-curve-bottom" style="top: 150px;"></div>
+
+                        <!-- Nodos en rama derecha -->
+                        <div class="git-node right-node" style="top: 100px;"></div>
+                        <div class="git-node right-node" style="top: 160px;"></div>
+
+                        <!-- Rama izquierda (morada) -->
+                        <div class="branch-line left-branch-line" style="top: 280px; height: 60px;"></div>
+
+                        <!-- Conectores de rama izquierda -->
+                        <div class="connector left-connector" style="top: 280px;"></div>
+                        <div class="curve left-curve-top" style="top: 270px;"></div>
+                        <div class="connector left-connector" style="top: 340px;"></div>
+                        <div class="curve left-curve-bottom" style="top: 330px;"></div>
+
+                        <!-- Nodos en rama izquierda -->
+                        <div class="git-node left-node" style="top: 280px;"></div>
+                        <div class="git-node left-node" style="top: 340px;"></div>
+
+                        <!-- Etiquetas de los commits -->
+                        <div class="commit-label main-label" style="top: 40px;">Versión actual</div>
+                        <div class="commit-label main-label" style="top: 100px;">Mejora de estructura v1.3</div>
+                        <div class="commit-label right-label" style="top: 100px;">Optimización semántica</div>
+                        <div class="commit-label right-label" style="top: 160px;">Mejora de precisión</div>
+                        <div class="commit-label main-label" style="top: 160px;">Refactorización v1.2</div>
+                        <div class="commit-label main-label" style="top: 220px;">Ajuste de formato v1.1</div>
+                        <div class="commit-label main-label" style="top: 280px;">Revisión de coherencia v1.0</div>
+                        <div class="commit-label left-label" style="top: 280px;">Experimentación</div>
+                        <div class="commit-label left-label" style="top: 340px;">Prueba alternativa</div>
+                        <div class="commit-label main-label" style="top: 340px;">Ajuste inicial v0.2</div>
+                        <div class="commit-label main-label" style="top: 400px;">Versión inicial v0.1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="flex-1 flex justify-center items-center p-6">
+            <div class="max-w-2xl w-full">
+                <!-- Título -->
+                <h1 class="text-2xl font-bold mb-6 text-blue-400 text-center">Prompt Symphony</h1>
+
+                <!-- Área de prompt editable -->
+                <div id="prompt-input" contenteditable="true"
+                    class="w-full min-h-[150px] bg-gray-800 border border-gray-600 rounded-3xl p-4 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="Ingresa tu prompt aquí..."></div>
+
+                <!-- Botones -->
+                <div class="flex flex-wrap gap-4 mt-4 justify-center">
+                    <button id="submit-button"
+                        class="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-3xl transition-colors flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Send
+                    </button>
+                    <button id="analyze-button"
+                        class="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-3xl transition-colors flex items-center">
+                        <i class="fas fa-search mr-2"></i> Analyze
+                    </button>
+                    <button id="profiling-button"
+                        class="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-3xl transition-colors flex items-center">
+                        <i class="fas fa-user-cog mr-2"></i> Profiling
+                    </button>
+                    <button id="graph-button"
+                        class="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-3xl transition-colors flex items-center">
+                        <i class="fas fa-project-diagram mr-2"></i> Graph
+                    </button>
+                </div>
+
+                <!-- Área de resultados -->
+                <div id="results"
+                    class="mt-6 bg-gray-800 border border-gray-700 rounded-3xl p-5 min-h-[100px] text-gray-300">
+                    <p class="text-gray-500">Los resultados se mostrarán aquí...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Alternar expansión de la barra lateral
+        document.getElementById('sidebar').addEventListener('click', function () {
+            this.classList.toggle('expanded');
+        });
+
+        // Función para el botón "Send"
+        document.getElementById('submit-button').addEventListener('click', function () {
+            const prompt = document.getElementById('prompt-input').innerText.trim();
+            if (prompt === '') {
+                document.getElementById('results').innerHTML = '<p class="text-red-400">Por favor, ingresa un prompt.</p>';
+            } else {
+                document.getElementById('results').innerHTML = `
+                    <div class="animate-fade-in">
+                        <p class="font-medium mb-2">Prompt enviado:</p>
+                        <div class="mt-2 bg-gray-700 p-3 rounded-lg">${prompt}</div>
+                    </div>
+                `;
+            }
+        });
+
+        // Función para el botón "Analyze"
+        document.getElementById('analyze-button').addEventListener('click', function () {
+            const prompt = document.getElementById('prompt-input').innerText.trim();
+            if (prompt === '') {
+                document.getElementById('results').innerHTML = '<p class="text-red-400">Por favor, ingresa un prompt para analizar.</p>';
+            } else {
+                const wordCount = prompt.split(/\s+/).filter(word => word.length > 0).length;
+                const charCount = prompt.length;
+                const sentences = prompt.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0).length;
+
+                document.getElementById('results').innerHTML = `
+                    <h3 class="font-semibold mb-4 text-lg text-blue-400">Análisis del prompt:</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-gray-700 p-4 rounded-lg shadow">
+                            <div class="text-2xl font-bold text-blue-400">${wordCount}</div>
+                            <div class="text-sm text-gray-400">Palabras</div>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded-lg shadow">
+                            <div class="text-2xl font-bold text-blue-400">${charCount}</div>
+                            <div class="text-sm text-gray-400">Caracteres</div>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded-lg shadow">
+                            <div class="text-2xl font-bold text-blue-400">${sentences}</div>
+                            <div class="text-sm text-gray-400">Oraciones</div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        // Función para el botón "Profiling"
+        document.getElementById('profiling-button').addEventListener('click', function () {
+            const prompt = document.getElementById('prompt-input').innerText.trim();
+            if (prompt === '') {
+                document.getElementById('results').innerHTML = '<p class="text-red-400">Por favor, ingresa un prompt para realizar el profiling.</p>';
+            } else {
+                document.getElementById('results').innerHTML = `
+                    <h3 class="font-semibold mb-4 text-lg text-blue-400">Perfil del prompt:</h3>
+                    <div class="bg-gray-700 p-4 rounded-lg mb-3 shadow">
+                        <p class="mb-3">Tono: <span class="text-blue-400 font-medium">Neutral</span></p>
+                        <p class="mb-3">Complejidad: <span class="text-blue-400 font-medium">Media</span></p>
+                        <p class="mb-3">Tipo: <span class="text-blue-400 font-medium">Instructivo</span></p>
+                        <p>Oportunidades de mejora:</p>
+                        <ul class="list-disc pl-5 mt-2 text-gray-300">
+                            <li>Añadir mayor especificidad en las instrucciones</li>
+                            <li>Incorporar ejemplos concretos</li>
+                            <li>Estructurar mejor los pasos secuenciales</li>
+                        </ul>
+                    </div>
+                    <p class="text-sm text-gray-400 italic">*Análisis basado en patrones comunes de lenguaje</p>
+                `;
+            }
+        });
+
+        // Función para el botón "Graph"
+        document.getElementById('graph-button').addEventListener('click', function () {
+            const prompt = document.getElementById('prompt-input').innerText.trim();
+            if (prompt === '') {
+                document.getElementById('results').innerHTML = '<p class="text-red-400">Por favor, ingresa un prompt para generar el gráfico.</p>';
+            } else {
+                document.getElementById('results').innerHTML = `
+                    <h3 class="font-semibold mb-4 text-lg text-blue-400">Visualización del prompt:</h3>
+                    <div class="bg-gray-700 p-5 rounded-lg text-center shadow">
+                        <p class="mb-4">Representación del gráfico para el prompt ingresado:</p>
+                        <div class="h-40 flex items-end justify-around px-6 mb-3">
+                            <div class="bg-blue-500 w-5 rounded-t transition-all duration-500" style="height: ${Math.random() * 80 + 20}px"></div>
+                            <div class="bg-blue-500 w-5 rounded-t transition-all duration-500" style="height: ${Math.random() * 80 + 20}px"></div>
+                            <div class="bg-blue-500 w-5 rounded-t transition-all duration-500" style="height: ${Math.random() * 80 + 20}px"></div>
+                            <div class="bg-blue-500 w-5 rounded-t transition-all duration-500" style="height: ${Math.random() * 80 + 20}px"></div>
+                            <div class="bg-blue-500 w-5 rounded-t transition-all duration-500" style="height: ${Math.random() * 80 + 20}px"></div>
+                            <div class="bg-blue-500 w-5 rounded-t transition-all duration-500" style="height: ${Math.random() * 80 + 20}px"></div>
+                            <div class="bg-blue-500 w-5 rounded-t transition-all duration-500" style="height: ${Math.random() * 80 + 20}px"></div>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-400">Distribución de elementos en el prompt</div>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+Tabla: Prompt
+CREATE TABLE prompt (
+    id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Identificador único del prompt
+    texto_original text NOT NULL,                       -- Texto original del prompt ingresado por el usuario
+    texto_corregido text,                               -- Texto del prompt después de la corrección
+    fecha_creacion timestamptz NOT NULL DEFAULT now(),  -- Fecha y hora de creación del prompt
+    usuario_id bigint NOT NULL                          -- Identificador del usuario que ingresó el prompt
+);
+-- Tabla para almacenar los prompts ingresados por los usuarios
+Tabla: Usuario
+CREATE TABLE usuario (
+    id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Identificador único del usuario
+    nombre text NOT NULL,                               -- Nombre del usuario
+    email text NOT NULL UNIQUE,                         -- Correo electrónico del usuario
+    fecha_registro timestamptz NOT NULL DEFAULT now()   -- Fecha de registro del usuario
+);
+-- Tabla para almacenar la información de los usuarios
+Tabla: Correccion
+CREATE TABLE correccion (
+    id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Identificador único de la corrección
+    prompt_id bigint NOT NULL,                          -- Identificador del prompt corregido
+    tipo text NOT NULL,                                 -- Tipo de corrección realizada (gramatical, claridad, etc.)
+    descripcion text,                                   -- Descripción de la corrección realizada
+    fecha_aplicacion timestamptz NOT NULL DEFAULT now() -- Fecha y hora de aplicación de la corrección
+);
+-- Tabla para registrar las correcciones aplicadas a los prompts
+Tabla: Lenguaje Sensible
+CREATE TABLE lenguaje_sensible (
+    id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Identificador único del término o frase
+    termino text NOT NULL,                              -- Palabra o frase considerada sensible o dañina
+    categoria text NOT NULL,                            -- Categoría del lenguaje sensible (ofensivo, sesgado, etc.)
+    descripcion text                                    -- Descripción del por qué el término es considerado sensible
+);
+-- Tabla para almacenar términos y frases sensibles o dañinas
+Tabla: Alternativa
+CREATE TABLE alternativa (
+    id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Identificador único de la alternativa
+    lenguaje_sensible_id bigint NOT NULL,               -- Identificador del término sensible
+    alternativa text NOT NULL,                          -- Texto alternativo sugerido para reemplazar el lenguaje sensible
+    descripcion text                                     -- Descripción de por qué la alternativa es más adecuada
+);
+-- Tabla para almacenar alternativas seguras y éticas para términos sensibles
+Tabla: Evaluacion
+CREATE TABLE evaluacion (
+    id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Identificador único de la evaluación
+    prompt_id bigint NOT NULL,                          -- Identificador del prompt evaluado
+    calidad_antes int,                                  -- Puntuación de calidad del prompt antes de la corrección
+    calidad_despues int,                                -- Puntuación de calidad del prompt después de la corrección
+    comentarios text                                    -- Comentarios sobre la evaluación realizada
+);
+-- Tabla para evaluar la calidad de los prompts antes y después de la corrección

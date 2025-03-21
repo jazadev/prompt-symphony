@@ -8,8 +8,5 @@ flask_session/
 *.py[cod]
 *.mo
 pip-log.txt
-<<<<<<< HEAD
 local.settings.json
 .python_packages
-=======
->>>>>>> f1fcaeb6afa3b063f9f67e55ceeeacc8e3e787f1

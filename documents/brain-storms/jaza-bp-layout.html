@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BP app</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    .sidebar {
+      width: 25%;
+      min-width: 10%;
+      background-color: #f8f9fa;
+      padding: 15px;
+    }
+
+    .body-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .footer {
+      background-color: #f1f1f1;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .navbar {
+      background-color: #007bff;
+    }
+
+    .navbar a {
+      color: white;
+    }
+
+    .nav-item {
+        list-style-type: none;
+    }
+
+    .dropdown-menu {
+      min-width: 200px;
+      list-style-type: none;
+    }
+
+    .text-box {
+      width: 100%;
+      height: 100px;
+      resize: none;
+    }
+
+    .btn-icon {
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .icon-button {
+      font-size: 1.5rem;
+    }
+
+    .container-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .form-control {
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+      }
+
+      .body-content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" hx-get="{{ url_for('main.index')}}" hx-trigger="click" hx-target="body" hx-push-url="/">
+            <img src="logo.png" alt="logo">
+        </a>
+      <div class="d-flex">
+        <li class="nav-item dropdown">
+            <!-- <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="avatar">Hola</span>
+            </a> -->
+            <button class="btn btn-light btn-icon" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="" href="#"></i> Iniciar sesión
+            </button>
+            <button class="btn btn-light btn-icon">
+                <i href="login.html" class=""></i> Registrarse
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item">Mi perfil</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item">Cerrar sesión</a></li>
+            </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>Hola, detecto que estas utilizando narrador</div>
+        <div>Deseas habilite la escucha voz</div>
+        <br>
+      <h6>Texto sugerido</h6>
+      <textarea class="form-control text-box" placeholder="Lenguage inclusivo, basado en contexto, cumpliento metricas de precisión, etc. "></textarea>
+    </div>
+
+    <!-- Body Content -->
+    <div class="body-content">
+      <div class="container-body">
+        <h1>Nombre de la Aplicación</h1>
+        <textarea class="form-control" placeholder="Escribe tu prompt aquí..."></textarea>
+        <div class="d-flex mt-3">
+          <button class="btn btn-primary ms-2">Botón 1</button>
+          <button class="btn btn-primary ms-2">Botón 2</button>
+          <button class="btn btn-primary ms-2">Botón 3</button>
+          <button class="btn btn-primary ms-2">Botón 4</button>
+          <button class="btn btn-primary ms-2">Botón 5</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    El uso de esta aplicación se sujeta a <a href="#">Políticas</a> y <a href="#">Términos del servicio</a>.
+  </footer>
+
+  <!-- Bootstrap JS, Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
