@@ -1,0 +1,132 @@
+name: Deploy Python API to Azure Functions
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Backend/infino/**'
+      - '.github/workflows/azure-functions-deploy.yml'
+
+env:
+  AZURE_FUNCTIONAPP_NAME: infino-function-api  
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './Backend/infino'
+  PYTHON_VERSION: '3.11'
+  
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Create and start virtual environment
+      run: |
+        python -m venv .venv
+        . .venv/bin/activate
+
+#   Check, haaaa que cosas con el Azure y la estructura puro reto.
+    - name: Debug directory structure
+      run: |
+        echo "Working directory: $(pwd)"
+        echo "Repository contents:"
+        ls -R
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+#        pip install -r ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt
+#        pip install pytest pytest-cov
+
+#    - name: Run tests
+#      run: |
+#        pytest tests/ --cov=api --cov-report=xml
+#      continue-on-error: true  # Optional: allows to continue even if tests fail
+
+#    - name: Upload test results
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: test-results
+#        path: coverage.xml
+#      continue-on-error: true  # Optional: allows to continue even if tests fail
+
+    - name: Configure App Settings
+      uses: azure/appservice-settings@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        app-settings-json: |
+          [
+            {
+              "name": "_MASTER",
+              "value": "${{ secrets._MASTER }}",
+              "slotSetting": false
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}",
+              "slotSetting": false
+            },
+            {
+              "name": "AZUREWEBJOBSSTORAGE",
+              "value": "${{ secrets.AZUREWEBJOBSSTORAGE }}",
+              "slotSetting": false
+            },
+            {
+              "name": "ENABLE_ORYX_BUILD",
+              "value": "${{ secrets.ENABLE_ORYX_BUILD }}",
+              "slotSetting": false
+            },
+            {
+              "name": "ENABLE_ORYX_BUILD",
+              "value": "${{ secrets.ENABLE_ORYX_BUILD }}",
+              "slotSetting": false
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "${{ secrets.FUNCTIONS_EXTENSION_VERSION }}",
+              "slotSetting": false
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "${{ secrets.FUNCTIONS_WORKER_RUNTIME }}",
+              "slotSetting": false
+            },
+            {
+              "name": "LANGUAGE_API_KEY",
+              "value": "${{ secrets.LANGUAGE_API_KEY }}",
+              "slotSetting": false
+            },
+            {
+              "name": "LANGUAGE_ENDPOINT",
+              "value": "${{ secrets.LANGUAGE_ENDPOINT }}",
+              "slotSetting": false
+            },
+            {
+              "name": "CONTENT_SAFETY_KEY",
+              "value": "${{ secrets.CONTENT_SAFETY_KEY }}",
+              "slotSetting": false
+            },
+            {
+              "name": "CONTENT_SAFETY_ENDPOINT",
+              "value": "${{ secrets.CONTENT_SAFETY_ENDPOINT }}",
+              "slotSetting": false
+            },
+          ]
+        connection-strings-json: '[]'
+      id: settings
+
+    - name: Deploy to Azure Functions
+      uses: Azure/functions-action@v1
+      id: deploy-to-function
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        slot-name: 'Production'
+        publish-profile: ${{ secrets.AZURE_INFINO_FUNCTIONAPP_PUBLISH_PROFILE }}
+        scm-do-build-during-deployment: true
+        enable-oryx-build: true

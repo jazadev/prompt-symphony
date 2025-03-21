@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.db
+*.sql
+flask_session/
+*.sh
+
+*.py[cod]
+*.mo
+pip-log.txt
+local.settings.json
+.python_packages
