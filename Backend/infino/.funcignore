@@ -1,0 +1,4 @@
+.venvifn
+.vscode
+local.settings.json
+.git*
