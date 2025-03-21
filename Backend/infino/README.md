@@ -1,10 +1,12 @@
 # Input Filtering and Normalization | infino
 
-## Documentation
+## 🧱 Architecture
+
+<img src="Backend/diagram.png" alt="infino architecture" style="width:500px;"/>
 
 ### Structure
-
-PromptProcessorAPI/
+```
+infino/
 ├── ProcessPrompt/
 │   ├── __init__.py
 │   └── function.json
@@ -16,7 +18,7 @@ PromptProcessorAPI/
 ├── host.json
 ├── local.settings.json
 └── requirements.txt
-
+```
 
 ## How-to
 **1. Basic Process**
@@ -54,3 +56,7 @@ curl -X POST https://infino-function-api.azurewebsites.net/process \
     }
   }'
 ```
+📊 **Monitoreo**
+
+- Métricas de rendimiento
+- Logs de actividad
