@@ -4,7 +4,7 @@
 
 <img src="Backend/diagram.png" alt="infino architecture" style="width:500px;"/>
 
-### Structure
+## 🗂️ Structure
 ```
 infino/
 ├── ProcessPrompt/
@@ -20,7 +20,7 @@ infino/
 └── requirements.txt
 ```
 
-## How-to
+## 📌 How-to
 **1. Basic Process**
 
 bash
