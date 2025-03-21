@@ -1,9 +1,12 @@
 from flask import Flask
+from os import environ
 
 # Always use relative import for custom module
 from .package.module import MODULE_VALUE
 
 app = Flask(__name__)
+
+SECRET_KEY = environ.get("ENABLE_ORYX_BUILD")
 
 @app.route("/")
 def index():
@@ -18,7 +21,7 @@ def hello(name: str):
 
 @app.route("/module")
 def module():
-    return f"loaded from FlaskApp.package.module = {MODULE_VALUE}"
+    return f"loaded from FlaskApp.package.module = {SECRET_KEY}"
 
 if __name__ == "__main__":
     app.run()
