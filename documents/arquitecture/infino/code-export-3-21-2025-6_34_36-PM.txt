@@ -1,0 +1,34 @@
+title Azure-based API Solution for Input Filtering and Normalization
+direction right
+// Nodes and groups
+API Endpoint [icon: globe, label: "API Endpoint (HTTPS Requests)"]
+
+Azure Function App [icon: azure-functions, label: "Azure Function App (Python API, Premium Hosting)"]
+
+Input Processing Services [icon: azure-cognitive-services] {
+  Language Detection [icon: azure-cognitive-services, label: "Language Detection"]
+
+  Sentiment Analysis [icon: azure-cognitive-services, label: "Sentiment Analysis"]
+  Text Normalization [icon: azure-cognitive-services, label: "Text Normalization"]
+  Content Security [icon: azure-cognitive-services, label: "Content Security"]
+  Filter Unsafe [icon: azure-cognitive-services, label: "Filter Unsafe"]
+  Spell Check [icon: azure-cognitive-services, label: "Spell Check"]
+  Process [icon: ] {
+  Azure Open AI [icon: openai]
+  GPT-4o-mini [icon: azure-applied-ai]
+  }
+}
+
+Application Insights [icon: azure-application-insights]
+Storage [icon:azure-storage]
+
+// Connections
+API Endpoint > Azure Function App
+
+// Insights connections
+Azure Function App > Input Processing Services
+Azure Function App --> Application Insights
+Azure Function App > Storage
+
+// Spell Check connections
+Spell Check > Azure Open AI
